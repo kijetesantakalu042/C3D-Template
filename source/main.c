@@ -117,9 +117,10 @@ void SceneRender(float interOcularDistance) {
     //Calculate model view matrix.
     C3D_Mtx modelView;
     Mtx_Identity(&modelView);
-    Mtx_Translate(&modelView, 0.0, 0.0, -2.0 + sinf(angleX), true);
+    Mtx_Scale(&modelView, 0.75f, 0.75f, 0.75f);
     Mtx_RotateX(&modelView, angleX, false);
     Mtx_RotateY(&modelView, angleY, false);
+    Mtx_Translate(&modelView, 0.0, 0.0, -2.0, false);
     
     if (interOcularDistance >= 0.0f){
         angleX += radian;
