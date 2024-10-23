@@ -172,7 +172,7 @@ cia: all
 	
 sideload: all
 	@echo "... sideloading ..."
-	@3dslink $(TARGET).3dsx -a 192.168.87.248
+	@3dslink $(TARGET).3dsx -a 192.168.87.249
 	@echo "Sideloading Complete!"
 
 $(BUILD):
