@@ -9,6 +9,8 @@
 #include "vertex.h"
 #include "bird_t3x.h"
 
+//Updated to add textures
+
 // Helper function for loading a texture from memory
 static bool loadTextureFromMem(C3D_Tex* tex, C3D_TexCube* cube, const void* data, size_t size)
 {
@@ -100,10 +102,18 @@ void sceneinit() {
     // with the fragment secondary color.
     // See https://www.opengl.org/sdk/docs/man2/xhtml/glTexEnv.xml for more insight
     environment = C3D_GetTexEnv(0);
-    C3D_TexEnvSrc(environment, C3D_Both, GPU_TEXTURE0, GPU_FRAGMENT_PRIMARY_COLOR, 0);
+    C3D_TexEnvInit(environment);
+    C3D_TexEnvSrc(environment, C3D_Both, GPU_FRAGMENT_PRIMARY_COLOR, GPU_FRAGMENT_SECONDARY_COLOR, 0);
     C3D_TexEnvOpRgb(environment, C3D_RGB, 0, 0);
     C3D_TexEnvOpAlpha(environment, C3D_Alpha, 0, 0);
     C3D_TexEnvFunc(environment, C3D_Both, GPU_ADD);
+
+    environment = C3D_GetTexEnv(1);
+    C3D_TexEnvInit(environment);
+    C3D_TexEnvSrc(environment, C3D_Both, GPU_PREVIOUS, GPU_TEXTURE0, 0);
+    C3D_TexEnvOpRgb(environment, C3D_RGB, 0, 0);
+    C3D_TexEnvOpAlpha(environment, C3D_Alpha, 0, 0);
+    C3D_TexEnvFunc(environment, C3D_Both, GPU_MODULATE);
 
     const C3D_Material material =
     {
