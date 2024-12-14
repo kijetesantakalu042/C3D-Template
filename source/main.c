@@ -104,15 +104,11 @@ void sceneinit() {
     environment = C3D_GetTexEnv(0);
     C3D_TexEnvInit(environment);
     C3D_TexEnvSrc(environment, C3D_Both, GPU_FRAGMENT_PRIMARY_COLOR, GPU_FRAGMENT_SECONDARY_COLOR, 0);
-    C3D_TexEnvOpRgb(environment, C3D_RGB, 0, 0);
-    C3D_TexEnvOpAlpha(environment, C3D_Alpha, 0, 0);
     C3D_TexEnvFunc(environment, C3D_Both, GPU_ADD);
 
     environment = C3D_GetTexEnv(1);
     C3D_TexEnvInit(environment);
     C3D_TexEnvSrc(environment, C3D_Both, GPU_PREVIOUS, GPU_TEXTURE0, 0);
-    C3D_TexEnvOpRgb(environment, C3D_RGB, 0, 0);
-    C3D_TexEnvOpAlpha(environment, C3D_Alpha, 0, 0);
     C3D_TexEnvFunc(environment, C3D_Both, GPU_MODULATE);
 
     const C3D_Material material =
