@@ -37,9 +37,9 @@ SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
 GRAPHICS	:=	gfx
-#GFXBUILD	:=	$(BUILD)
-ROMFS		:=	romfs
-GFXBUILD	:=	$(ROMFS)/gfx
+GFXBUILD	:=	$(BUILD)
+#ROMFS		:=	romfs
+#GFXBUILD	:=	$(ROMFS)/gfx
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -172,7 +172,7 @@ cia: all
 	
 sideload: all
 	@echo "... sideloading ..."
-	@3dslink $(TARGET).3dsx -a 192.168.87.249
+	@3dslink $(TARGET).3dsx -a 192.168.87.234
 	@echo "Sideloading Complete!"
 
 $(BUILD):

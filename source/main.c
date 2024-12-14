@@ -1,11 +1,25 @@
 #include <3ds.h>
 #include <citro3d.h>
+#include <tex3ds.h>
 #include <string.h>
 #include "vshader_shbin.h"
 #include <stdio.h>
 
 #include "vars.h"
 #include "vertex.h"
+#include "bird_t3x.h"
+
+// Helper function for loading a texture from memory
+static bool loadTextureFromMem(C3D_Tex* tex, C3D_TexCube* cube, const void* data, size_t size)
+{
+    Tex3DS_Texture t3x = Tex3DS_TextureImport(data, size, tex, cube, false);
+    if (!t3x)
+        return false;
+
+    // Delete the t3x object since we don't need it
+    Tex3DS_TextureFree(t3x);
+    return true;
+}
 
 void init() {
     // Do the standard init stuff
@@ -69,22 +83,29 @@ void sceneinit() {
     //Create vertex buffer objects.
     vbo_data = linearAlloc(sizeof(vertexList));
     memcpy(vbo_data, vertexList, sizeof(vertexList));
+    static C3D_Tex bird_tex;
 
     //Initialize and configure buffers.
     bufferInfo = C3D_GetBufInfo();
     BufInfo_Init(bufferInfo);
     BufInfo_Add(bufferInfo, vbo_data, sizeof(Vertex), 3, 0x210);
 
+    // Load the texture and bind it to the first texture unit
+    if (!loadTextureFromMem(&bird_tex, NULL, bird_t3x, bird_t3x_size))
+        svcBreak(USERBREAK_PANIC);
+    C3D_TexSetFilter(&bird_tex, GPU_LINEAR, GPU_NEAREST);
+    C3D_TexBind(0, &bird_tex);
+
     // Configure the first fragment shading substage to blend the fragment primary color
     // with the fragment secondary color.
     // See https://www.opengl.org/sdk/docs/man2/xhtml/glTexEnv.xml for more insight
     environment = C3D_GetTexEnv(0);
-    C3D_TexEnvSrc(environment, C3D_Both, GPU_FRAGMENT_PRIMARY_COLOR, GPU_FRAGMENT_SECONDARY_COLOR, 0);
+    C3D_TexEnvSrc(environment, C3D_Both, GPU_TEXTURE0, GPU_FRAGMENT_PRIMARY_COLOR, 0);
     C3D_TexEnvOpRgb(environment, C3D_RGB, 0, 0);
     C3D_TexEnvOpAlpha(environment, C3D_Alpha, 0, 0);
     C3D_TexEnvFunc(environment, C3D_Both, GPU_ADD);
 
-    static const C3D_Material material =
+    const C3D_Material material =
     {
         { 0.2f, 0.2f, 0.2f }, //ambient
         { 0.4f, 0.4f, 0.4f }, //diffuse
